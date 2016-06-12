@@ -58,6 +58,8 @@ MapSalesPanel::MapSalesPanel(PlayerInfo &player, bool isOutfitters)
 {
 	if(!isOutfitters)
 		swizzle = GameData::PlayerGovernment()->GetSwizzle();
+	for(const string &category : categories)
+		hideCategory[category] = true;
 }
 
 
@@ -70,6 +72,8 @@ MapSalesPanel::MapSalesPanel(const MapPanel &panel, bool isOutfitters)
 	SetCommodity(SHOW_SPECIAL);
 	if(!isOutfitters)
 		swizzle = GameData::PlayerGovernment()->GetSwizzle();
+	for(const string &category : categories)
+		hideCategory[category] = true;
 }
 
 
