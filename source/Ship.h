@@ -233,6 +233,8 @@ public:
 	// Apply a force to this ship, accelerating it. This might be from a weapon
 	// impact, or from firing a weapon, for example.
 	void ApplyForce(const Point &force);
+	// Halt ship, set the ship's velocity to 0.
+	void Halt();
 	
 	// Check if this ship has fighter or drone bays.
 	bool HasBays() const;

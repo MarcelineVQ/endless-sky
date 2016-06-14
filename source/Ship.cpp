@@ -1104,7 +1104,7 @@ bool Ship::Move(list<Effect> &effects, list<Flotsam> &flotsam)
 	}
 	
 	// Boarding:
-	if(isBoarding && (commands.Has(Command::FORWARD | Command::BACK) || commands.Turn()))
+	if(isBoarding && (commands.Has(Command::FORWARD | Command::BACK | Command::STOP) || commands.Turn()))
 		isBoarding = false;
 	shared_ptr<const Ship> target = (CanBeCarried() ? GetParent() : GetTargetShip());
 	if(target && !isDisabled)
@@ -1912,6 +1912,14 @@ void Ship::ApplyForce(const Point &force)
 		return;
 	
 	velocity += force / currentMass;
+}
+
+
+
+// Stop the ship completely
+void Ship::Halt()
+{
+	velocity = Point(0,0);
 }
 
 

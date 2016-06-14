@@ -85,7 +85,7 @@ void PreferencesPanel::Draw() const
 	table.AddColumn(115, Table::RIGHT);
 	table.SetUnderline(-120, 120);
 	
-	int firstY = -248;
+	int firstY = -258;
 	table.DrawAt(Point(-130, firstY));
 	
 	Point endPoint;
@@ -97,6 +97,7 @@ void PreferencesPanel::Draw() const
 		Command::LEFT,
 		Command::RIGHT,
 		Command::BACK,
+		Command::STOP,
 		Command::AFTERBURNER,
 		Command::LAND,
 		Command::JUMP,
@@ -122,7 +123,7 @@ void PreferencesPanel::Draw() const
 		Command::GATHER,
 		Command::HOLD
 	};
-	static const Command *BREAK = &COMMANDS[19];
+	static const Command *BREAK = &COMMANDS[20];
 	for(const Command &command : COMMANDS)
 	{
 		// The "BREAK" line is where to go to the next column.

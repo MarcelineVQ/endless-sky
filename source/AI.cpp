@@ -41,7 +41,7 @@ namespace {
 	const Command &AutopilotCancelKeys()
 	{
 		static const Command keys(Command::LAND | Command::JUMP | Command::BOARD | Command::AFTERBURNER
-			| Command::BACK | Command::FORWARD | Command::LEFT | Command::RIGHT);
+			| Command::BACK | Command::FORWARD | Command::LEFT | Command::RIGHT | Command::STOP);
 		
 		return keys;
 	}
@@ -2045,6 +2045,14 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player, const list<shared_ptr<
 		{
 			MoveTo(ship, command, target->Position(), 40., .8);
 			command |= Command::BOARD;
+		}
+	}
+	else if(keyStuck.Has(Command::STOP))
+	{
+		if(Stop(ship, command))
+		{
+			ship.Halt();
+			keyStuck.Clear();
 		}
 	}
 	
