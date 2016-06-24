@@ -203,6 +203,7 @@ private:
 	void CreateMissions();
 	void Autosave() const;
 	void Save(const std::string &path) const;
+	void NukeSaves() const;
 	
 	
 private:
@@ -216,6 +217,7 @@ private:
 	bool shouldLaunch = false;
 	bool hasFullClearance = true;
 	bool isDead = false;
+	bool permadeath = false;
 	
 	Account accounts;
 	

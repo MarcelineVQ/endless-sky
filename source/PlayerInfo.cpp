@@ -115,6 +115,8 @@ void PlayerInfo::Load(const string &path)
 			planet = GameData::Planets().Get(child.Token(1));
 		else if(child.Token(0) == "travel" && child.Size() >= 2)
 			travelPlan.push_back(GameData::Systems().Get(child.Token(1)));
+		else if(child.Token(0) == "permadeath")
+			permadeath = true;
 		else if(child.Token(0) == "reputation with")
 		{
 			for(const DataNode &grand : child)
@@ -246,6 +248,24 @@ void PlayerInfo::LoadRecent()
 
 
 
+// Completely remove this character's save files. This function is for killing
+// a player with the permadeath flag set.
+void PlayerInfo::NukeSaves() const
+{
+	// This captain doesn't exist anymore so remove it from recent.txt
+	if(Files::Read(Files::Config() + "recent.txt").find(Files::Name(filePath)) != string::npos)
+		Files::Write(Files::Config() + "recent.txt", "");
+
+	// Remove snapshots belonging to this player then the player
+	string snapshot = filePath.substr(0, filePath.length() - 4) + "~";
+	for(const string &save : Files::List(Files::Saves()))
+		if(save.find(snapshot) != string::npos)
+			Files::Delete(save);
+	Files::Delete(filePath);
+}
+
+
+
 // Save this player. The file name is based on the player's name.
 void PlayerInfo::Save() const
 {
@@ -365,7 +385,14 @@ void PlayerInfo::AddEvent(const GameEvent &event, const Date &date)
 // Mark this player as dead.
 void PlayerInfo::Die(bool allShipsDie)
 {
+	if(isDead)
+		return;
 	isDead = true;
+	if(permadeath)
+	{
+		//LeaderBoard.Save(); // Save this captain's stats for posterity
+		NukeSaves();
+	}
 	if(allShipsDie)
 		ships.clear();
 }
@@ -1721,6 +1748,8 @@ void PlayerInfo::Save(const string &path) const
 		out.Write("clearance");
 	for(const System *system : travelPlan)
 		out.Write("travel", system->Name());
+	if(permadeath)
+		out.Write("permadeath");
 	out.Write("reputation with");
 	out.BeginChild();
 	{
