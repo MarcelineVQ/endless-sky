@@ -191,7 +191,7 @@ bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 	{
 		// The "New Pilot" and "Enter Ship" buttons are in the same place.
 		GameData::Revert();
-		player.New();
+		player.New(GetUI());
 		
 		ConversationPanel *panel = new ConversationPanel(
 			player, *GameData::Conversations().Get("intro"));

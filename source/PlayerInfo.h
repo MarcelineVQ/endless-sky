@@ -56,7 +56,7 @@ public:
 	// Check if any player's information is loaded.
 	bool IsLoaded() const;
 	// Make a new player.
-	void New();
+	void New(UI *ui);
 	// Load an existing player.
 	void Load(const std::string &path);
 	// Load the most recently saved player.
@@ -204,6 +204,7 @@ private:
 	void Autosave() const;
 	void Save(const std::string &path) const;
 	void NukeSaves() const;
+	void EnablePermadeath();
 	
 	
 private:

@@ -64,7 +64,7 @@ bool PlayerInfo::IsLoaded() const
 
 
 // Make a new player.
-void PlayerInfo::New()
+void PlayerInfo::New(UI *ui)
 {
 	// Clear any previously loaded data.
 	Clear();
@@ -86,6 +86,10 @@ void PlayerInfo::New()
 	for(const auto &it : GameData::Events())
 		if(it.second.GetDate())
 			AddEvent(it.second, it.second.GetDate());
+			
+	// Would the player like permadeath?
+	ui->Push(new Dialog(this, &PlayerInfo::EnablePermadeath,
+		"Would you like to enable permanent deaths for this pilot?"));
 }
 
 
@@ -244,6 +248,14 @@ void PlayerInfo::LoadRecent()
 		Clear();
 	else
 		Load(recentPath);
+}
+
+
+
+// Toogle permadeath flag
+void PlayerInfo::EnablePermadeath()
+{
+	permadeath = true;
 }
 
 

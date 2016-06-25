@@ -207,7 +207,7 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 	if(key == 'n')
 	{
 		GameData::Revert();
-		player.New();
+		player.New(GetUI());
 		
 		Messages::Reset();
 		ConversationPanel *panel = new ConversationPanel(
