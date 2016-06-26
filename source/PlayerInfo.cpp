@@ -86,11 +86,14 @@ void PlayerInfo::New(UI *ui)
 	for(const auto &it : GameData::Events())
 		if(it.second.GetDate())
 			AddEvent(it.second, it.second.GetDate());
-			
-	// Would the player like permadeath?
-	ui->Push(new Dialog(this, &PlayerInfo::EnablePermadeath,
-		"Would you like to make death permanent for this pilot?\n"
-		"(This will cause all of this pilots saves to be deleted on death.)"));
+
+	// If a ui has been provided we'll use it to set up the player further
+	if(ui)
+	{
+		ui->Push(new Dialog(this, &PlayerInfo::EnablePermadeath,
+			"Would you like to make death permanent for this pilot?\n"
+			"(This will cause all of this pilots saves to be deleted on death.)"));
+	}
 }
 
 
@@ -253,7 +256,7 @@ void PlayerInfo::LoadRecent()
 
 
 
-// Toogle permadeath flag
+// Set permadeath flag
 void PlayerInfo::EnablePermadeath()
 {
 	permadeath = true;

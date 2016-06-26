@@ -56,7 +56,7 @@ public:
 	// Check if any player's information is loaded.
 	bool IsLoaded() const;
 	// Make a new player.
-	void New(UI *ui);
+	void New(UI *ui = nullptr);
 	// Load an existing player.
 	void Load(const std::string &path);
 	// Load the most recently saved player.
