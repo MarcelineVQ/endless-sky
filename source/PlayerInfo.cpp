@@ -89,7 +89,8 @@ void PlayerInfo::New(UI *ui)
 			
 	// Would the player like permadeath?
 	ui->Push(new Dialog(this, &PlayerInfo::EnablePermadeath,
-		"Would you like to enable permanent deaths for this pilot?"));
+		"Would you like to make death permanent for this pilot?\n"
+		"(This will cause all of this pilots saves to be deleted on death.)"));
 }
 
 
@@ -1395,7 +1396,10 @@ void PlayerInfo::HandleEvent(const ShipEvent &event, UI *ui)
 	
 	// If the player's flagship was destroyed, the player is dead.
 	if((event.Type() & ShipEvent::DESTROY) && !ships.empty() && event.Target().get() == Flagship())
+	{
+		Messages::Add("Your ship has been destroyed! You have died.");
 		Die();
+	}
 }
 
 
