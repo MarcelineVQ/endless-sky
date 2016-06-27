@@ -293,7 +293,7 @@ void PlayerInfo::Save() const
 	// Remember that this was the most recently saved player.
 	Files::Write(Files::Config() + "recent.txt", filePath + '\n');
 	
-	if(filePath.rfind(".txt") == filePath.length() - 4)
+	if(!IsModeSet("hardcore") && filePath.rfind(".txt") == filePath.length() - 4)
 	{
 		// Only update the backups if this save will have a newer date.
 		SavedGame saved(filePath);
@@ -1753,6 +1753,8 @@ void PlayerInfo::CreateMissions()
 
 void PlayerInfo::Autosave() const
 {
+	if(IsModeSet("hardcore"))
+		return;
 	if(filePath.length() < 4)
 		return;
 	
