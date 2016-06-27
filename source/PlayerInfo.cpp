@@ -121,10 +121,11 @@ void PlayerInfo::Load(const string &path)
 			system = GameData::Systems().Get(child.Token(1));
 		else if(child.Token(0) == "planet" && child.Size() >= 2)
 			planet = GameData::Planets().Get(child.Token(1));
+		else if(child.Token(0) == "modes")
+			for(const DataNode &grand : child)
+				gameModes.emplace_back(grand.Token(0));
 		else if(child.Token(0) == "travel" && child.Size() >= 2)
 			travelPlan.push_back(GameData::Systems().Get(child.Token(1)));
-		else if(child.Token(0) == "permadeath")
-			permadeath = true;
 		else if(child.Token(0) == "reputation with")
 		{
 			for(const DataNode &grand : child)
@@ -259,7 +260,7 @@ void PlayerInfo::LoadRecent()
 // Set permadeath flag
 void PlayerInfo::EnablePermadeath()
 {
-	permadeath = true;
+	gameModes.push_back("permadeath");
 }
 
 
@@ -404,7 +405,7 @@ void PlayerInfo::Die(bool allShipsDie)
 	if(isDead)
 		return;
 	isDead = true;
-	if(permadeath)
+	if(IsModeSet("permadeath"))
 	{
 		//LeaderBoard.Save(); // Save this captain's stats for posterity
 		NukeSaves();
@@ -641,6 +642,17 @@ int64_t PlayerInfo::Salaries() const
 	
 	// Every crew member except the player receives 100 credits per day.
 	return 100 * (crew - 1);
+}
+
+
+
+// Is a specific game mode set for thie player
+bool PlayerInfo::IsModeSet(const string &mode) const
+{
+	for(const string &str : gameModes)
+		if(str == mode)
+			return true;
+	return false;
 }
 
 
@@ -1765,10 +1777,18 @@ void PlayerInfo::Save(const string &path) const
 		out.Write("planet", planet->Name());
 	if(planet && planet->CanUseServices())
 		out.Write("clearance");
+	if(gameModes.size() > 0)
+	{
+		out.Write("modes");
+		out.BeginChild();
+		{
+			for(const auto &it : gameModes)
+				out.Write(it);
+		}
+		out.EndChild();
+	}
 	for(const System *system : travelPlan)
 		out.Write("travel", system->Name());
-	if(permadeath)
-		out.Write("permadeath");
 	out.Write("reputation with");
 	out.BeginChild();
 	{
