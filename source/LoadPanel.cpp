@@ -78,8 +78,8 @@ void LoadPanel::Draw() const
 	
 	if(!selectedPilot.empty())
 		info.SetCondition("pilot selected");
-	if(!player.IsDead() && player.IsLoaded() && !selectedPilot.empty())
-		info.SetCondition("pilot alive");
+	if(!player.IsModeSet("hardcore") && !player.IsDead() && player.IsLoaded() && !selectedPilot.empty())
+		info.SetCondition("pilot cansave");
 	if(selectedFile.find('~') != string::npos)
 		info.SetCondition("snapshot selected");
 	if(loadedInfo.IsLoaded())
@@ -221,7 +221,7 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 			"Are you sure you want to delete the selected pilot, \""
 				+ selectedPilot + "\", and all their saved games?"));
 	}
-	else if(key == 'a' && !player.IsDead() && player.IsLoaded())
+	else if(key == 'a' && !player.IsDead() && player.IsLoaded() && !player.IsModeSet("hardcore"))
 	{
 		string wasSelected = selectedPilot;
 		auto it = files.find(selectedPilot);
