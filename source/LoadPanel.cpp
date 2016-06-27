@@ -78,7 +78,7 @@ void LoadPanel::Draw() const
 	
 	if(!selectedPilot.empty())
 		info.SetCondition("pilot selected");
-	if(!player.IsModeSet("hardcore") && !player.IsDead() && player.IsLoaded() && !selectedPilot.empty())
+	if(!player.IsModeSet("hardcore") && !player.IsDead() && player.IsLoaded() && !selectedPilot.empty() && player.IsInGame() && selectedPilot == player.Identifier())
 		info.SetCondition("pilot cansave");
 	if(selectedFile.find('~') != string::npos)
 		info.SetCondition("snapshot selected");
@@ -198,12 +198,15 @@ void LoadPanel::LoadCallback()
 	// another step to actually place it. So, take two steps to avoid a flicker.
 	gamePanels.StepAll();
 	gamePanels.StepAll();
+	player.SetInGame();
 }
 
 
 
 bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 {
+	bool canSave = !player.IsModeSet("hardcore") && !player.IsDead() && player.IsLoaded() && !selectedPilot.empty() && player.IsInGame() && selectedPilot == player.Identifier();
+	
 	if(key == 'n')
 	{
 		GameData::Revert();
@@ -221,7 +224,7 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 			"Are you sure you want to delete the selected pilot, \""
 				+ selectedPilot + "\", and all their saved games?"));
 	}
-	else if(key == 'a' && !player.IsDead() && player.IsLoaded() && !player.IsModeSet("hardcore"))
+	else if(key == 'a' && canSave)
 	{
 		string wasSelected = selectedPilot;
 		auto it = files.find(selectedPilot);

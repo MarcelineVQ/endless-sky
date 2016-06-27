@@ -182,7 +182,10 @@ bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 		return false;
 	
 	if(player.IsLoaded() && (key == 'e' || command.Has(Command::MENU)))
+	{
 		GetUI()->Pop(this);
+		player.SetInGame();
+	}
 	else if(key == 'p')
 		GetUI()->Push(new PreferencesPanel());
 	else if(key == 'l')

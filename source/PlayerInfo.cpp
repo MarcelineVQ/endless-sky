@@ -657,6 +657,22 @@ bool PlayerInfo::IsModeSet(const string &mode) const
 
 
 
+// Is the player playing
+bool PlayerInfo::IsInGame() const
+{
+	return inGame;
+}
+
+
+
+// The player is playing
+void PlayerInfo::SetInGame()
+{
+	inGame = true;
+}
+
+
+
 // Get a pointer to the ship that the player controls. This is always the first
 // ship in the list.
 const Ship *PlayerInfo::Flagship() const

@@ -108,8 +108,11 @@ public:
 	// Calculate the daily salaries for crew, not counting crew on "parked" ships.
 	int64_t Salaries() const;
 	
-	// Is a specific game mode set for thie player
+	// Is a specific game mode set for the player
 	bool IsModeSet(const std::string &mode) const;
+	bool IsInGame() const;
+	void SetInGame();
+		
 
 	// Access the flagship (the first ship in the list). This returns null if
 	// the player does not have any ships.
@@ -261,6 +264,7 @@ private:
 	std::list<GameEvent> gameEvents;
 	
 	bool freshlyLoaded = true;
+	bool inGame = false;
 };
 
 
