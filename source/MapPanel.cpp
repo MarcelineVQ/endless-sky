@@ -504,9 +504,9 @@ void MapPanel::DrawTravelPlan() const
 	double escortCapacity = 0.;
 	double escortJumpFuel = 1.;
 	bool escortHasJump = false;
-	// Skip your flagship, parked ships, and fighters.
+	// Skip your flagship, parked/destroyed ships, and fighters.
 	for(const shared_ptr<Ship> &it : player.Ships())
-		if(it.get() != ship && !it->IsParked() && !it->CanBeCarried())
+		if(it.get() != ship && !it->IsParked() && !it->CanBeCarried() && !it->IsDestroyed())
 		{
 			double capacity = it->Attributes().Get("fuel capacity") * it->Fuel();
 			double jumpFuel = it->Attributes().Get("hyperdrive") ?
