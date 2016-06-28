@@ -494,6 +494,22 @@ void MapPanel::DrawTravelPlan() const
 	bool hasHyper = ship ? ship->Attributes().Get("hyperdrive") : false;
 	bool hasJump = ship ? ship->Attributes().Get("jump drive") : false;
 	
+	// Single place for checking if it's a ship we care about
+	// Skip your flagship, parked/destroyed ships, and fighters.
+	auto ShipConditions = [&](const shared_ptr<Ship> &it) -> bool
+	{
+		return it.get() != ship && !it->IsParked() && !it->CanBeCarried() && !it->IsDestroyed();
+	};
+
+	// Is the flagship the only boat in the water
+	bool soloFleet = true;
+	for(const shared_ptr<Ship> &it : player.Ships())
+		if(ShipConditions(it))
+		{
+			soloFleet = false;
+			break;
+		}
+
 	// Find out how much fuel your ship and your escorts use per jump.
 	double flagshipCapacity = 0.;
 	if(ship)
@@ -504,9 +520,9 @@ void MapPanel::DrawTravelPlan() const
 	double escortCapacity = 0.;
 	double escortJumpFuel = 1.;
 	bool escortHasJump = false;
-	// Skip your flagship, parked/destroyed ships, and fighters.
+
 	for(const shared_ptr<Ship> &it : player.Ships())
-		if(it.get() != ship && !it->IsParked() && !it->CanBeCarried() && !it->IsDestroyed())
+		if(ShipConditions(it))
 		{
 			double capacity = it->Attributes().Get("fuel capacity") * it->Fuel();
 			double jumpFuel = it->Attributes().Get("hyperdrive") ?
@@ -570,7 +586,7 @@ void MapPanel::DrawTravelPlan() const
 		Color drawColor = outOfFlagshipFuelRangeColor;
 		if(isWormhole)
 			drawColor = wormholeColor;
-		else if(flagshipCapacity >= 0. && escortCapacity >= 0.)
+		else if(flagshipCapacity >= 0. && (escortCapacity >= 0. || soloFleet))
 			drawColor = withinFleetFuelRangeColor;
 		else if(flagshipCapacity >= 0. || escortCapacity >= 0.)
 			drawColor = defaultColor;
