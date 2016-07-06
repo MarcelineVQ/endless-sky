@@ -739,8 +739,11 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 			target.reset();
 		else
 		{
+			// If a ship can do both scans but only one is queued, get closer
+			bool skipScan = (cargoScan && outfitScan) && (Has(ship.GetGovernment(), target, ShipEvent::SCAN_CARGO) ^ Has(ship.GetGovernment(), target, ShipEvent::SCAN_OUTFITS));
+
 			CircleAround(ship, command, *target);
-			if(!ship.GetGovernment()->IsPlayer())
+			if(!ship.GetGovernment()->IsPlayer() && !skipScan)
 				command |= Command::SCAN;
 		}
 		return;
