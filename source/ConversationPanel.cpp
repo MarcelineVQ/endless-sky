@@ -46,14 +46,18 @@ namespace {
 ConversationPanel::ConversationPanel(PlayerInfo &player, const Conversation &conversation, const System *system)
 	: player(player), conversation(conversation), scroll(0.), system(system)
 {
-	subs["<first>"] = player.FirstName();
-	subs["<last>"] = player.LastName();
-	if(player.Flagship())
-		subs["<ship>"] = player.Flagship()->Name();
-	
+	Init();
 	Goto(0);
 }
 
+ConversationPanel::ConversationPanel(PlayerInfo &player, const Conversation &conversation, const Ship *ship)
+	: player(player), conversation(conversation), scroll(0.)
+{
+	Init();
+	if(ship)
+		subs["<ship>"] = ship->Name();
+	Goto(0);
+}
 
 
 // Draw this panel.
@@ -316,6 +320,16 @@ void ConversationPanel::Goto(int index, int choice)
 		choices.emplace_back(altered);
 	}
 	this->choice = 0;
+}
+
+
+
+void ConversationPanel::Init()
+{
+	subs["<first>"] = player.FirstName();
+	subs["<last>"] = player.LastName();
+	if(player.Flagship())
+		subs["<ship>"] = player.Flagship()->Name();
 }
 
 

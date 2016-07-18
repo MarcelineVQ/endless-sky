@@ -30,6 +30,7 @@ class PlayerInfo;
 class Point;
 class Sprite;
 class System;
+class Ship;
 
 
 
@@ -39,6 +40,7 @@ class System;
 class ConversationPanel : public Panel {
 public:
 	ConversationPanel(PlayerInfo &player, const Conversation &conversation, const System *system = nullptr);
+	ConversationPanel(PlayerInfo &player, const Conversation &conversation, const Ship *ship);
 	
 template <class T>
 	void SetCallback(T *t, void (T::*fun)(int));
@@ -57,6 +59,7 @@ protected:
 	
 private:
 	void Goto(int index, int choice = -1);
+	void Init();
 	void SelectNode();
 	
 	
