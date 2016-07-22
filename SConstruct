@@ -17,7 +17,7 @@ if 'SCHROOT_CHROOT_NAME' in os.environ and 'steamrt' in os.environ['SCHROOT_CHRO
 opts = Variables()
 opts.Add(PathVariable("PREFIX", "Directory to install under", "/usr/local", PathVariable.PathIsDirCreate))
 opts.Add(PathVariable("DESTDIR", "Destination root directory", "", PathVariable.PathAccept))
-opts.Add(EnumVariable("mode", "Compilation mode", "release", allowed_values=("release", "debug", "profile")))
+opts.Add(EnumVariable("mode", "Compilation mode", "release", allowed_values=("release", "debug", "profile", "sanitize")))
 opts.Update(env)
 
 Help(opts.GenerateHelpText(env))
@@ -30,6 +30,15 @@ if env["mode"] == "debug":
 if env["mode"] == "profile":
 	flags += ["-pg"]
 	env.Append(LINKFLAGS = ["-pg"])
+
+# Sanitize various parts of the program to get error reports during runtime
+if env["mode"] == "sanitize":
+	env["CXX"] = 'clang++'
+	env["LINK"] = 'clang++'
+	flags += ["-g"]
+	flags += ["-fsanitize=undefined"]
+	flags += ["-fsanitize=integer"]
+	env.Append(LIBS = ["ubsan"])
 
 # Required build flags. If you want to use SSE optimization, you can turn on
 # -msse3 or (if just building for your own computer) -march=native.
