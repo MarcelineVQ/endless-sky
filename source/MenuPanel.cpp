@@ -23,6 +23,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Information.h"
 #include "LoadPanel.h"
 #include "MainPanel.h"
+#include "Messages.h"
 #include "Planet.h"
 #include "PlayerInfo.h"
 #include "Point.h"
@@ -181,7 +182,7 @@ bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 	if(!isReady)
 		return false;
 	
-	if(player.IsLoaded() && (key == 'e' || command.Has(Command::MENU)))
+	if(player.IsLoaded() && !player.IsDead() && (key == 'e' || command.Has(Command::MENU)))
 	{
 		GetUI()->Pop(this);
 		player.SetInGame();
@@ -194,6 +195,7 @@ bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 	{
 		// The "New Pilot" and "Enter Ship" buttons are in the same place.
 		GameData::Revert();
+		Messages::Reset();
 		player.New(GetUI());
 		
 		ConversationPanel *panel = new ConversationPanel(
