@@ -1386,7 +1386,10 @@ void PlayerInfo::MissionCallback(int response)
 		missionList.pop_front();
 	}
 	else if(response == Conversation::DIE)
+	{
+		Messages::Add("You have died.");
 		Die(true);
+	}
 }
 
 
