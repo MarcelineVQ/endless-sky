@@ -61,6 +61,7 @@ public:
 	void Load(const std::string &path);
 	// Load the most recently saved player.
 	void LoadRecent();
+	void SpaceSave();
 	// Save this player (using the Identifier() as the file name).
 	void Save() const;
 	
@@ -221,6 +222,8 @@ private:
 	Date date;
 	const System *system = nullptr;
 	const Planet *planet = nullptr;
+	const System *lastSystem = nullptr;
+	const Planet *lastPlanet = nullptr;
 	bool shouldLaunch = false;
 	bool hasFullClearance = true;
 	bool isDead = false;

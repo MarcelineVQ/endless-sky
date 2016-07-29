@@ -322,6 +322,8 @@ int main(int argc, char *argv[])
 		// If you quit while landed on a planet, save the game.
 		if(player.GetPlanet())
 			player.Save();
+		else if(player.IsModeSet("hardcore"))
+			player.SpaceSave();
 		
 		// The Preferences class reads the screen dimensions, so update them if
 		// the window is full screen:

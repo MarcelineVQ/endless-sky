@@ -118,9 +118,15 @@ void PlayerInfo::Load(const string &path)
 		else if(child.Token(0) == "date" && child.Size() >= 4)
 			date = Date(child.Value(1), child.Value(2), child.Value(3));
 		else if(child.Token(0) == "system" && child.Size() >= 2)
+		{
 			system = GameData::Systems().Get(child.Token(1));
+			lastSystem = system;
+		}
 		else if(child.Token(0) == "planet" && child.Size() >= 2)
+		{
 			planet = GameData::Planets().Get(child.Token(1));
+			lastPlanet = planet;
+		}
 		else if(child.Token(0) == "modes")
 			for(const DataNode &grand : child)
 				gameModes.emplace_back(grand.Token(0));
@@ -261,6 +267,7 @@ void PlayerInfo::LoadRecent()
 void PlayerInfo::EnablePermadeath()
 {
 	gameModes.push_back("permadeath");
+	gameModes.push_back("hardcore");
 }
 
 
@@ -1783,9 +1790,25 @@ void PlayerInfo::Autosave() const
 
 
 
+void PlayerInfo::SpaceSave()
+{
+	if(!planet)
+	{
+		this->system = lastSystem;
+		this->planet = lastPlanet;
+	}
+	
+	flagship->SetSystem(system);
+	flagship->SetPlanet(planet);
+	
+	Save();
+}
+
+
+
 void PlayerInfo::Save(const string &path) const
 {
-	if(!planet || !system)
+	if(!system)
 		return;
 	
 	DataWriter out(path);
