@@ -45,8 +45,13 @@ LoadPanel::LoadPanel(PlayerInfo &player, UI &gamePanels)
 	// the player is saved so that any snapshot you create will be of the
 	// player's current state, rather than one planet ago. Only do this if the
 	// game is paused, i.e. the "main panel" is not on top:
-	if(player.GetPlanet() && !player.IsDead() && !gamePanels.IsTop(&*gamePanels.Root()))
-		player.Save();
+	if(!player.IsDead() && !gamePanels.IsTop(&*gamePanels.Root()))
+	{
+		if(player.GetPlanet())
+			player.Save();
+		else if(player.IsModeSet("hardcore"))
+			player.SpaceSave();
+	}
 	UpdateLists();
 }
 

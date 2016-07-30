@@ -324,6 +324,7 @@ int main(int argc, char *argv[])
 			player.Save();
 		else if(player.IsModeSet("hardcore"))
 			player.SpaceSave();
+			//this isn't working right, it'll trigger if you're at a planet but exit to the main menu before quitting
 		
 		// The Preferences class reads the screen dimensions, so update them if
 		// the window is full screen:

@@ -92,7 +92,7 @@ void PlayerInfo::New(UI *ui)
 	{
 		ui->Push(new Dialog(this, &PlayerInfo::EnablePermadeath,
 			"Would you like to make death permanent for this pilot?\n"
-			"(This will cause all of this pilots saves to be deleted on death.)"));
+			"(This will cause all of this pilots saves to be deleted on death.)\n Currently this also enabled Hardcore Mode for testing purposes. Edit your save file to change this."));
 	}
 }
 

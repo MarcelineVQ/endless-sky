@@ -190,7 +190,10 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 	{
 		// When closing the panel, mark the player dead if their ship was captured.
 		if(playerDied)
+		{
 			player.Die(true);
+			Messages::Add("You have died in melee combat.");
+		}
 		// Handle any death benefits that are owed.
 		if(deathBenefits)
 		{
