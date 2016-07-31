@@ -1,3 +1,27 @@
+# permadeath-mode
+
+In this branch are fixes for the regular game and additional gameplay modes to enhance your play.
+
+In the player's save file is a new section called modes where these are enabled. UI support to enable them ingame is in the works.  
+e.g.:
+```
+pilot Scroopy Noopers
+date 22 8 3014
+system "Tania Australis"
+planet Ingot
+clearance
+modes
+	permadeath
+	hardcore
+...
+```
+
+Hardcore Mode forces you to only use one save file while in game for the pilot who has it set. Got a bad habbit of save-scumming? Beat it with Hardcore Mode! This mode also makes ship losses permanent.
+
+Permadeath Mode will delete all of a pilot's save files any time that pilot dies.  
+Eventually it will include a sort of leaderboard that keeps track of your deceased captains, tracking their final net worth, combat ranking, licenses, flagship, and possibly more.
+
+
 # endless-sky
 
 Explore other star systems. Earn money by trading, carrying passengers, or completing missions. Use your earnings to buy a better ship or to upgrade the weapons and engines on your current one. Blow up pirates. Take sides in a civil war. Or leave human space behind and hope to find some friendly aliens whose culture is more civilized than your own...
