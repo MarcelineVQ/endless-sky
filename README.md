@@ -18,7 +18,7 @@ modes
 
 Hardcore Mode forces you to only use one save file while in game for the pilot who has it set. Got a bad habbit of save-scumming? Beat it with Hardcore Mode! This mode also makes ship losses permanent.
 
-Permadeath Mode will delete all of a pilot's save files any time that pilot dies.  
+Permadeath Mode will delete all of a pilot's save files any time that pilot dies. This is THE way to play the game, every outfit choice you make matters.  
 Eventually it will include a sort of leaderboard that keeps track of your deceased captains, tracking their final net worth, combat ranking, licenses, flagship, and possibly more.
 
 

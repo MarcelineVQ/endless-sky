@@ -1792,15 +1792,35 @@ void PlayerInfo::Autosave() const
 
 void PlayerInfo::SpaceSave()
 {
+	if(!system)
+		return;
 	if(!planet)
 	{
-		this->system = lastSystem;
-		this->planet = lastPlanet;
+		const Planet *landAt = nullptr;
+		
+		for(const StellarObject &object : system->Objects())
+			if(object.GetPlanet() && object.GetPlanet()->CanLand())
+			{
+				landAt = object.GetPlanet();
+				break;
+			}
+		if(landAt)
+		{
+			planet = landAt;
+			system = landAt->GetSystem();
+		}
+		else
+		{
+			// This should be changed to choose the nearest reachable system
+			this->system = lastSystem;
+			this->planet = lastPlanet;
+		}
 	}
 	
+	// Move our flaghip to where we've decided to save
 	flagship->SetSystem(system);
 	flagship->SetPlanet(planet);
-	
+
 	Save();
 }
 
