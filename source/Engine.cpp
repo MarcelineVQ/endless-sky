@@ -606,13 +606,13 @@ void Engine::Draw() const
 			radar[drawTickTock].Draw(
 				interface->GetPoint("radar"),
 				.025,
-				interface->GetSize("radar").X(),
-				interface->GetSize("radar").Y());
+				.5 * interface->GetSize("radar").X(),
+				.5 * interface->GetSize("radar").Y());
 		}
 		if(interface->HasPoint("target") && targetAngle)
 		{
 			Point center = interface->GetPoint("target");
-			double radius = interface->GetSize("target").X();
+			double radius = .5 * interface->GetSize("target").X();
 			PointerShader::Draw(center, targetAngle, 10., 10., radius, Color(1.));
 		}
 	}
@@ -647,6 +647,10 @@ void Engine::Draw() const
 	
 	// Draw escort status.
 	escorts.Draw();
+	
+	// Upload any preloaded sprites that are now available. This is to avoid
+	// filling the entire backlog of sprites before landing on a planet.
+	GameData::Progress();
 	
 	if(Preferences::Has("Show CPU / GPU load"))
 	{
@@ -699,7 +703,13 @@ void Engine::EnterSystem()
 	
 	asteroids.Clear();
 	for(const System::Asteroid &a : system->Asteroids())
-		asteroids.Add(a.Name(), a.Count(), a.Energy());
+	{
+		// Check whether this is a minable or an ordinary asteroid.
+		if(a.Type())
+			asteroids.Add(a.Type(), a.Count(), a.Energy(), system->AsteroidBelt());
+		else
+			asteroids.Add(a.Name(), a.Count(), a.Energy());
+	}
 	
 	// Place five seconds worth of fleets.
 	for(int i = 0; i < 5; ++i)
@@ -921,7 +931,7 @@ void Engine::CalculateStep()
 	// Now that the planets have been drawn, we can draw the asteroids on top
 	// of them. This could be done later, as long as it is done before the
 	// collision detection.
-	asteroids.Step();
+	asteroids.Step(effects, flotsam);
 	asteroids.Draw(draw[calcTickTock], newCenter);
 	
 	// Move existing projectiles. Do this before ships fire, which will create
@@ -1128,14 +1138,13 @@ void Engine::CalculateStep()
 		// object. If the asteroid turns out to be closer than the ship, it
 		// shields the ship (unless the projectile has a blast radius).
 		Point hitVelocity;
-		double closestHit = 0.;
+		double closestHit = 1.;
 		shared_ptr<Ship> hit;
 		const Government *gov = projectile.GetGovernment();
 		
 		// If this "projectile" is a ship explosion, it always explodes.
 		if(gov)
 		{
-			closestHit = asteroids.Collide(projectile, step, &hitVelocity);
 			// Projectiles can only collide with ships that are in the current
 			// system and are not landing, and that are hostile to this projectile.
 			for(shared_ptr<Ship> &ship : ships)
@@ -1154,6 +1163,7 @@ void Engine::CalculateStep()
 						hitVelocity = ship->Velocity();
 					}
 				}
+			closestHit = asteroids.Collide(projectile, step, closestHit, &hitVelocity);
 		}
 		
 		if(closestHit < 1.)
