@@ -1207,7 +1207,7 @@ void Engine::CalculateStep()
 					}
 		}
 		else if(projectile.HasBlastRadius())
-			radar[calcTickTock].Add(Radar::SPECIAL, projectile.Position(), 4.8);
+			radar[calcTickTock].Add(Radar::SPECIAL, projectile.Position(), 1.8);
 		
 		// Now, we can draw the projectile. The motion blur should be reduced
 		// depending on how much motion blur is in the sprite itself:
